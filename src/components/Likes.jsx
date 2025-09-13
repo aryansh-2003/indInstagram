@@ -1,45 +1,84 @@
 import React, { useEffect, useState } from 'react'
 import interservice from '../appwrite/interaction'
 
+function Likes({userData, post}) {
+    const [isLiked, setIsLiked] = useState(false)
+    const [totalLikes, setTotalLikes] = useState(0)
+    const [loading, setLoading] = useState(false)
 
-function Likes({userData,post}) {
-    const [val, setval] = useState(false)
-    const [totallike,settotalLike] = useState("0")
-
-    useEffect(()=>{
-        const getlike = async () =>{
-            const like = await interservice.getLikes(userData.$id,{postId:post.$id})
-            if (like.total !== 0 || like.documents.length !== 0) setval(true)
+    useEffect(() => {
+        const checkLikeStatus = async () => {
+            if (!userData || !post) return
+            
+            try {
+                const like = await interservice.getLikes(userData.$id, {postId: post.$id})
+                setIsLiked(like.total !== 0 || like.documents.length !== 0)
+            } catch (error) {
+                console.log('Error checking like status:', error)
+            }
         }
 
-        getlike()
-         
-    },[])
+        const getTotalLikes = async () => {
+            if (!post) return
+            
+            try {
+                const totalLikes = await interservice.getTotalLikes({postId: post.$id})
+                setTotalLikes(totalLikes?.total || 0)
+            } catch (error) {
+                console.log('Error getting total likes:', error)
+            }
+        }
 
-    const getTotalLikes = async () =>{
-        const totalLikes = await interservice.getTotalLikes({postId:post.$id})
-        settotalLike(totalLikes.total)
-    }
-    getTotalLikes()
+        checkLikeStatus()
+        getTotalLikes()
+    }, [userData, post])
 
     const likeHandler = async () => {
-        console.log(userData.$id,post.$id)
-        const val = await interservice.createDocument(userData.$id,{postId:post.$id})
-        if(val)
-        { setval(true)}
-        else{
-            setval(false)
+        if (!userData || !post || loading) return
+        
+        setLoading(true)
+        try {
+            const result = await interservice.createDocument(userData.$id, {postId: post.$id})
+            setIsLiked(result)
+            
+            // Update total likes count
+            const totalLikes = await interservice.getTotalLikes({postId: post.$id})
+            setTotalLikes(totalLikes?.total || 0)
+        } catch (error) {
+            console.log('Error handling like:', error)
+        } finally {
+            setLoading(false)
         }
     }
-  return (
-     <div>
-        <button className="rounded full w-20 " onClick={likeHandler}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 642 640">
-        <path  fill={`${val ? '#ff0000' : "#000000" }`} d="M305 151.1L320 171.8L335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1L576 231.7C576 343.9 436.1 474.2 363.1 529.9C350.7 539.3 335.5 544 320 544C304.5 544 289.2 539.4 276.9 529.9C203.9 474.2 64 343.9 64 231.7L64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1z"/></svg>
-            <h2>{totallike}</h2>
-        </button>
-     </div>
-  )
+
+    return (
+        <div className="flex flex-col">
+            <button 
+                className={`transition-all duration-200 ${loading ? 'opacity-50' : 'hover:scale-110'}`}
+                onClick={likeHandler}
+                disabled={loading}
+            >
+                <svg 
+                    className={`w-6 h-6 transition-colors ${isLiked ? 'text-red-500' : 'text-gray-900 hover:text-gray-600'}`}
+                    fill={isLiked ? 'currentColor' : 'none'} 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={isLiked ? 0 : 2} 
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                    />
+                </svg>
+            </button>
+            {totalLikes > 0 && (
+                <span className="text-sm font-semibold text-gray-900 mt-2">
+                    {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
+                </span>
+            )}
+        </div>
+    )
 }
 
 export default Likes

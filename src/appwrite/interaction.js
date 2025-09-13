@@ -44,7 +44,7 @@ export class interService{
             console.log(error)
         }
     }
-
+    
     async getLikes(ownerId,{postId}){
         try {
              return await this.datbases.listDocuments(

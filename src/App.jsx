@@ -6,38 +6,50 @@ import {Header} from './components'
 import {Footer} from './components'
 import { Outlet } from 'react-router-dom'
 
-
-
 function App() {
-
   const [loading, setloading] = useState(true)
   const dispatch = useDispatch()
 
-  useEffect(()=>{
+  useEffect(() => {
     authService.getCurrentUser()
-    .then((userData)=>{
+    .then((userData) => {
       if (userData) {
         dispatch(login({userData}))
-      }else{
+      } else {
         dispatch(logout())
       }
-      
     })
     .finally(
-      ()=>setloading(false)
+      () => setloading(false)
     )
-  },[])
+  }, [])
 
- 
   return !loading ? (
-  <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
-    <div className='w-full flex flex-row'>
-    <Header/>
-    <Outlet/>
+    <div className='min-h-screen bg-gray-50'>
+      {/* Main Container */}
+      <div className='flex'>
+        {/* Sidebar */}
+        <Header />
+        
+        {/* Main Content Area */}
+        <div className='flex-1 ml-60'>
+          <main className='min-h-screen'>
+            <Outlet />
+          </main>
+        </div>
+      </div>
+      
+      {/* Footer - Hidden on mobile, shown only when needed */}
+      <Footer />
     </div>
-    <Footer/>
-  </div>
-) : null
+  ) : (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex flex-col items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+        <p className="mt-4 text-gray-600">Loading...</p>
+      </div>
+    </div>
+  )
 }
 
 export default App

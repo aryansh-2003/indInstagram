@@ -15,24 +15,6 @@ export class Service {
       this.bucket = new Storage(this.client);
     }
 
-    async createDocument({slug, userId, title, content, status, featuredImage}) {
-        try {
-            return await this.databases.createDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                slug,
-                {
-                    userId,       
-                    title,
-                    content,
-                    status,                 
-                    featuredImage,
-                }
-            )
-        } catch (error) {
-            console.log("Auth service :: creating Document failed", error);
-        }
-    }
 
     async createUserDocument(userId,{username,bgImage,avatar}){
         console.log(userId,username)
@@ -50,18 +32,15 @@ export class Service {
         }
     }
 
-    async updatePost(slug,{title,content,featuredImage,status}){
+    async updatePost(slug,{avatar}){
+        console.log(slug,avatar)
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwriteUserCollectionId,
                 slug,
                 {
-                    title,
-                    content,
-                    featuredImage,
-                    status,
-
+                    avatar
                 }
             )
         } catch (error) {
@@ -88,17 +67,30 @@ export class Service {
 
     }
 
-    async getALLUserPosts(userId){
+    async getUserAccnt(userId){
         try {
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                [Query.equal("userId", `${userId}`)],
-                
+                conf.appwriteUserCollectionId,
+                [Query.equal("$id", `${userId}`)],
 
             )
         } catch (error) {
             console.log("Appwrite serive :: getPosts :: error", error);
+            return false
+        }
+    }
+
+       async uploadFile(file){
+        console.log(file)
+        try {
+            return await this.bucket.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                file
+            )
+        } catch (error) {
+            console.log("Auth service :: Uploading File failed", error);
             return false
         }
     }
@@ -121,7 +113,7 @@ export class Service {
         try {
             return await this.databases.getDocument(
                 conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
+                conf.appwriteUserCollectionId,
                 slug
             )
         } catch (error) {
@@ -173,24 +165,16 @@ export class Service {
         }
     }
 
-    
-    async uploadFile(file){
-        try {
-            return await this.bucket.createFile(
-                conf.appwriteBucketId,
-                ID.unique(),
-                file
-            )
-        } catch (error) {
-            console.log("Auth service :: Uploading File failed", error);
-        }
-    }
-
        getFilePreiview(fileId){
-        return this.bucket.getFileView(
-            conf.appwriteBucketId,
-            fileId,
-        )
+        if(fileId == null || undefined){
+            return null
+        }else{
+                return this.bucket.getFileView(
+                conf.appwriteBucketId,
+                fileId
+                )
+        }
+       
     }
 
 

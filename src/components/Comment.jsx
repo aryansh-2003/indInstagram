@@ -1,63 +1,149 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import  { Input,Button } from '../components'
-import interservice, { interService } from '../appwrite/interaction'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import interservice from '../appwrite/interaction'
+import authservice from '../appwrite/auth'
+import userService from '../appwrite/user'
+import { useEffect, useState } from 'react'
 
-function Comment({post,userData}) {
- 
+function Comment({post, userData}) {
+    const [allComments, setAllComments] = useState([])
+    const [commentsWithAuthors, setCommentsWithAuthors] = useState([])
+    const [loading, setLoading] = useState(false)
+    const { register, handleSubmit, reset } = useForm()
 
-  const[allcomment,setallcomment] = useState("")
+    const fetchComments = async () => {
+        if (!post) return
+        
+        try {
+            const commentList = await interservice.getTotalComments({postId: post.$id})
+            if (commentList && commentList.documents) {
+                setAllComments(commentList.documents)
+                
+                // Fetch author details for each comment
+                const commentsWithAuthors = await Promise.all(
+                    commentList.documents.map(async (comment) => {
+                        try {
+                            const author = await userService.getUserAccnt(comment.ownerId)
+                            console.log(comment.ownerId)
+                            console.log(author)
+                            return {
+                                ...comment,
+                                author: author || { name: 'Unknown User' }
+                            }
+                        } catch (error) {
+                            return {
+                                ...comment,
+                                author: { name: 'Unknown User' }
+                            }
+                        }
+                    })
+                )
+                setCommentsWithAuthors(commentsWithAuthors)
+            }
+        } catch (error) {
+            console.log('Error fetching comments:', error)
+        }
+    }
 
-const allComments = async () =>{
-  const commentList = await interservice.getTotalComments({postId:post.$id})
-  if(commentList) {
-    setallcomment(commentList)
-  }
-}
+    useEffect(() => {
+        fetchComments()
+    }, [post])
 
-allComments()
+    const addComment = async (data) => {
+        if (!data.comment.trim() || !userData || loading) return
+        
+        setLoading(true)
+        try {
+            const response = await interservice.createComment(userData.$id, {
+                postId: post.$id,
+                comment: data.comment
+            })
+            
+            if (response) {
+                reset() // Clear the input
+                fetchComments() // Refresh comments
+            }
+        } catch (error) {
+            console.log('Error adding comment:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
-// allcomment?.documents.map((comment)=>{console.log(comment)})
-  
-  const { register, handleSubmit} = useForm()
+    return (
+        <div className="space-y-4">
+            {/* Comments List */}
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+                {commentsWithAuthors.length > 0 ? (
+                    commentsWithAuthors.map((comment) => (
+                        console.log(comment.author.documents?.[0]?.username),
+                        <div key={comment.$id} className="flex space-x-3">
+                            <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full p-0.5 flex-shrink-0">
+                                <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-semibold text-gray-700">
+                                        {comment.author.documents?.[0]?.username.charAt(0)?.toUpperCase() || '?'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex-1">
+                                <span className="font-semibold text-sm mr-2">
+                                    {comment.author.documents?.[0]?.username || 'Unknown User'}
+                                </span>
+                                <span className="text-sm text-gray-900">
+                                    {comment.comment}
+                                </span>
+                                <div className="flex items-center space-x-4 mt-1">
+                                    <span className="text-xs text-gray-500">2h</span>
+                                    <button className="text-xs text-gray-500 hover:text-gray-700 font-semibold">
+                                        Reply
+                                    </button>
+                                    <button className="text-xs text-gray-500 hover:text-red-500">
+                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="text-center py-4 text-gray-500 text-sm">
+                        No comments yet. Be the first to comment!
+                    </div>
+                )}
+            </div>
 
-  const comment = async (data) =>{
-    if (!data) return 
-    console.log(data.comment)
-    const response  = await interservice.createComment(userData.$id,{postId:post.$id,comment:data.comment})
-    console.log(response)
-  }
-
-  return (
-    <>
-          <form onSubmit={handleSubmit(comment)} method="POST" className="space-y-6">
-                <Input
-                label = "Comment"
-                placeholder = "Enter your comment"
-                type = "text"
-                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                {...register("comment",{
-                  required: true,
-                })}
-                >
-                </Input>
-                <Button
-                    type='submit'
-                    className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                    >Sign In
-                </Button>
-          </form>
-                {allcomment ? allcomment?.documents.map((comment)=>{return(
-                <>
-                <div className='w-full bg-gray-500'>
-                <p className='bg-red-400 mb-2'>{comment.comment}</p>
+            {/* Add Comment Form */}
+            <form onSubmit={handleSubmit(addComment)} className="border-t border-gray-200 pt-4">
+                <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full p-0.5 flex-shrink-0">
+                        <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <span className="text-xs font-semibold text-gray-700">
+                                {userData?.name?.charAt(0)?.toUpperCase() || 'Y'}
+                            </span>
+                        </div>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        className="flex-1 text-sm placeholder-gray-400 border-none outline-none bg-transparent"
+                        {...register("comment", {
+                            required: true,
+                        })}
+                    />
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className={`text-blue-500 text-sm font-semibold transition-colors ${
+                            loading ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-700'
+                        }`}
+                    >
+                        {loading ? 'Posting...' : 'Post'}
+                    </button>
                 </div>
-                </>)
-              }): null}
-     </>
-  )
+            </form>
+        </div>
+    )
 }
 
 export default Comment

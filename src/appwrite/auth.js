@@ -1,5 +1,6 @@
 import conf from '../conf/Conf.js'
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, Query } from "appwrite";
+import userService from './user.js'
 
 export class Authservice {
     client = new Client()
@@ -14,9 +15,9 @@ export class Authservice {
 
     async createNewAccount({email, password, name}) {
         try {
-            const userAccount = await this.account.create(ID.unique(), email, password, name);
+            const newID = ID.unique()
+            const userAccount = await this.account.create(newID, email, password, name); 
             if(userAccount) this.login({email,password})
-            console.log(userAccount)
         } catch (error) {
             console.log("Auth service :: creating account failed", error);
         }
@@ -24,7 +25,21 @@ export class Authservice {
 
     async getCurrentUser() {
         try {
-            return await this.account.get();
+            const Account = await this.account.get();
+            console.log(Account)
+            if (Account){
+                const userDoc = await userService.getUserAccnt(Account.$id)
+                console.log(userDoc)
+
+                if(userDoc.documents.length == 0){
+                     const userCreate = await userService.createUserDocument(Account.$id,{username:Account.name})
+                     console.log(userCreate)
+                     if(!userCreate) return "Something went wrong"
+                     return Account
+                }else{
+                    return Account
+                }
+            }
         } catch (error) {
             console.log("Appwrite serive :: getCurrentUser :: error", error);
         }
@@ -48,9 +63,11 @@ export class Authservice {
         }
     }
 
-    async getUserInfo({userId}){
+    async getUserInfo(userId){
         try {
-           return await this.account.get(userId)
+           return await this.account.get("68ac46650018177b2e3e",
+            [Query.equal("userId", ``)]
+           )
         } catch (error) {
             console.log("Auth service :: getting user failed", error);
         }

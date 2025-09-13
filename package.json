@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.9.0",
     "@tailwindcss/vite": "^4.1.12",
     "@tinymce/tinymce-react": "^6.3.0",
     "appwrite": "^18.2.0",

@@ -94,7 +94,7 @@ function Home() {
             </div>
 
             {/* Main Feed */}
-            <div className="max-w-2xl mx-auto px-4 py-8">
+            <div className="max-w mx-auto px-4 py-4">
                 <div className="space-y-6">
                     {posts.map((post) => (
                         <div key={post.$id}>
@@ -105,7 +105,7 @@ function Home() {
             </div>
 
             {/* Suggested Sidebar - Hidden on mobile */}
-            <div className="hidden xl:block fixed right-8 top-20 w-80">
+            {/* <div className="hidden xl:block fixed right-8 top-20 w-80">
                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                     <h3 className="font-semibold text-gray-900 mb-4">Suggestions for you</h3>
                     <div className="space-y-3">
@@ -125,7 +125,7 @@ function Home() {
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

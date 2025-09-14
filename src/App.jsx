@@ -25,15 +25,15 @@ function App() {
   }, [])
 
   return !loading ? (
-    <div className='min-h-screen bg-gray-50'>
+    <div className=' bg-gray-50'>
       {/* Main Container */}
       <div className='flex'>
         {/* Sidebar */}
         <Header />
         
         {/* Main Content Area */}
-        <div className='flex-1 ml-60'>
-          <main className='min-h-screen'>
+        <div className='w-full'>
+          <main className=''>
             <Outlet />
           </main>
         </div>

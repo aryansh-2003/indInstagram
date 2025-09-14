@@ -22,7 +22,7 @@ function PostCard({$id, title, featuredImage, userId}) {
   }, [userId])
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6 max-w-lg mx-auto">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb- max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">

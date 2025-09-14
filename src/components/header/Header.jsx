@@ -114,18 +114,18 @@ function Header() {
           ),
           active: authStatus,
         },
-        // {
-        //   name: "Profile",
-        //   slug: `/user/${userData ? userData.$id : ''}`,
-        //   image: (
-        //     <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-        //       <span className="text-white text-xs font-bold">
-        //         {userData?.name?.charAt(0)?.toUpperCase() || 'U'}
-        //       </span>
-        //     </div>
-        //   ),
-        //   active: authStatus
-        // }
+        {
+          name: "Profile",
+          slug: `/user`,
+          image: (
+            <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">
+                {userData?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </span>
+            </div>
+          ),
+          active: authStatus
+        }
       ]
 
   return (

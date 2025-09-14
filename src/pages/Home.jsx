@@ -14,7 +14,6 @@ function Home() {
         if (value) {
             appwriteService.getPosts().then((posts) => {
                 if (posts) setposts(posts.documents)
-                    console.log(posts)
             })
         }
     }, [value])

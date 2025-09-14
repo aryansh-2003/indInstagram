@@ -136,7 +136,9 @@ export class Service {
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 [
-                    Query.equal("status","active")
+                    Query.equal("status","active"),
+                     Query.orderDesc('$createdAt')
+
                 ]
             )
         } catch (error) {

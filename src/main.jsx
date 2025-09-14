@@ -13,7 +13,9 @@ import AllPosts from './pages/AllPost'
 import AddPost from './pages/AddPost'
 import EditPost from './pages/EditPost'
 import Post from './pages/Post'
-import User from './pages/User'
+
+import UserPannel from './user-pannel/UserPannel.jsx'
+
 
 
 const router = createBrowserRouter([
@@ -69,17 +71,12 @@ const router = createBrowserRouter([
           ),
       },
       {
-        path: "/user/:slug",
-        element: (
-            <AuthLayout authentication>
-                {" "}
-                <User/>
-            </AuthLayout>
-        ),
-     },
-      {
           path: "/post/:slug",
           element: <Post />,
+      },
+      {
+          path: "/user/:userId",
+          element: <UserPannel/>,
       },
     ]
   }

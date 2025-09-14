@@ -2,24 +2,29 @@ import React, { useEffect, useState } from 'react'
 import appwriteService from '../appwrite/config.js'
 import authservice from '../appwrite/auth.js'
 import userService from '../appwrite/user.js'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import InstagramUserPanel from '../user-pannel/UserPannel.jsx'
 
 
 function PostCard({$id, title, featuredImage, userId}) {
   const [userdetails, setuserdetails] = useState()
-  // console.log(userId)
   authservice.getUserInfo({userId:"68b129aa0024454ceb67"}).then((user)=>{
-    // console.log(user)
   })
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const userDetails = async () => {
       const details = await userService.getUserAccnt(userId)
-      console.log(details)
       setuserdetails(details)
     }
     userDetails()
   }, [userId])
+
+  const userNameHandler = () => {
+    console.log(userdetails)
+    navigate(`/user/${userdetails.documents[0]?.$id}`)
+  }
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb- max-w-2xl mx-auto">
@@ -29,13 +34,13 @@ function PostCard({$id, title, featuredImage, userId}) {
           <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full p-0.5">
             <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
               <span className="text-xs font-semibold text-gray-700">
-                {userdetails?.name?.charAt(0)?.toUpperCase() || '?'}
+               {userdetails?.name?.charAt(0)?.toUpperCase() || '?'}
               </span>
             </div>
           </div>
           <div className="flex flex-col">
             <span className="font-semibold text-sm text-gray-900">
-              {userdetails? userdetails.documents?.[0]?.username : "Loading..."}
+               <button onClick={userNameHandler}>{userdetails? userdetails.documents?.[0]?.username : "Loading..."}</button>
             </span>
             <span className="text-xs text-gray-500">2h</span>
           </div>
@@ -90,7 +95,7 @@ function PostCard({$id, title, featuredImage, userId}) {
 
         {/* Likes */}
         <div className="mb-2">
-          <span className="font-semibold text-sm">127 likes</span>
+          <span className="font-semibold text-sm"></span>
         </div>
 
         {/* Caption */}

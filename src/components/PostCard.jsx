@@ -4,6 +4,7 @@ import authservice from '../appwrite/auth.js'
 import userService from '../appwrite/user.js'
 import { Link, useNavigate } from 'react-router-dom'
 import InstagramUserPanel from '../user-pannel/UserPannel.jsx'
+import DisplayPic from './DisplayPic.jsx'
 
 
 function PostCard({$id, title, featuredImage, userId}) {
@@ -21,6 +22,7 @@ function PostCard({$id, title, featuredImage, userId}) {
     userDetails()
   }, [userId])
 
+
   const userNameHandler = () => {
     console.log(userdetails)
     navigate(`/user/${userdetails.documents[0]?.$id}`)
@@ -30,14 +32,8 @@ function PostCard({$id, title, featuredImage, userId}) {
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb- max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full p-0.5">
-            <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-              <span className="text-xs font-semibold text-gray-700">
-               {userdetails?.name?.charAt(0)?.toUpperCase() || '?'}
-              </span>
-            </div>
-          </div>
+        <div className="flex items-center  space-x-3">
+                 <DisplayPic className={'w-8 h-8 '} userdetails={userdetails ? userdetails.documents[0] : null}/>
           <div className="flex flex-col">
             <span className="font-semibold text-sm text-gray-900">
                <button onClick={userNameHandler}>{userdetails? userdetails.documents?.[0]?.username : "Loading..."}</button>

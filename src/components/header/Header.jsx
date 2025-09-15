@@ -129,7 +129,7 @@ function Header() {
       ]
 
   return (
-    <div className="md:fixed flex flex-row md:flex-col items-center bottom-0 w-full fixed   md:left-0 md:top-0 md:h-full md:w-60 bg-white border-r border-gray-200 z-200">
+    <div className="md:fixed flex flex-row md:flex-col items-center bottom-0 w-full fixed   md:left-0 md:top-0 md:h-full md:w-[20%] bg-white border-r border-gray-200 z-200">
       {/* Logo Section */}
       <div className="p-6 border-b border-gray-100 hidden md:block  md:visible">
         <Link to="/" className="block">

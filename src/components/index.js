@@ -15,6 +15,10 @@ import SignUp from './SignUp.jsx'
 import Logoutbtn from './header/Logoutbtn.jsx'
 import Likes from './Likes.jsx'
 import Comment from './Comment.jsx'
+import FollowBtn from './followBtn.jsx'
+import DisplayPic from './DisplayPic.jsx'
+
+
 
 
 
@@ -35,5 +39,7 @@ export {
     Input,
     Post,
     Likes,
-    Comment
+    Comment,
+    FollowBtn,
+    DisplayPic
 }

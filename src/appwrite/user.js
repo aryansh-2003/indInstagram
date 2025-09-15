@@ -32,6 +32,61 @@ export class Service {
         }
     }
 
+      async createUserSubscription(followerId,followedId){
+        const alreadySubscribed = await this.getSubscription(followerId,followedId)
+           if(alreadySubscribed.documents.length === 0){
+                    try {
+                    return await this.databases.createDocument(
+                        conf.appwriteDatabaseId,
+                        conf.appwriteSubscriptionCollectionId,
+                        ID.unique(),
+                        {
+                            follower:followerId,
+                            followed:followedId
+                        }
+                    )
+                } catch (error) {
+                    console.log("Auth service :: creating Document failed", error); 
+                }
+           }else{
+            const result = await this.unSubscribe(alreadySubscribed.documents?.[0].$id)
+               console.log(result)
+           }
+       
+    }
+
+        async getSubscription(followerId,followedId){
+            console.log(followerId,followedId)
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteSubscriptionCollectionId,
+                 [
+                    Query.equal("follower",`${followerId}`),
+                    Query.equal("followed",`${followedId}`)
+                ]
+            )
+        } catch (error) {
+            console.log("Auth service :: getting post failed", error);
+            
+        }
+    }
+
+        async unSubscribe(slug){
+        try {
+            return await this.databases.deleteDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteSubscriptionCollectionId,
+                slug
+            )
+            return true
+        } catch (error) {
+            console.log("Auth service :: Deleting post failed", error);
+            return false
+        }
+    }
+
+
     async updatePost(slug,{avatar}){
         console.log(slug,avatar)
         try {

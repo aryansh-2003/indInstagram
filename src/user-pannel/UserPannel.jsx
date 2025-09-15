@@ -3,6 +3,10 @@ import { MoreHorizontal, Grid3X3, Bookmark, Tag, User, Plus, Heart, MessageCircl
 import { useNavigate, useParams } from 'react-router-dom';
 import userService from '../appwrite/user.js'
 import appwriteService from '../appwrite/config.js'
+import {FollowBtn} from '../components/index.js'
+import {DisplayPic} from '../components/index.js'
+
+
 
 
 function InstagramUserPanel () {
@@ -92,7 +96,7 @@ function InstagramUserPanel () {
         {/* Profile Info Section */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-12 space-y-6 lg:space-y-0">
           {/* Profile Picture */}
-          <div className="flex justify-center lg:justify-start">
+          {/* <div className="flex justify-center lg:justify-start">
             <div className="relative">
               <div className="w-32 h-32 overflow-hidden lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center  justify-center">
                 <img className='rounded-full overflow-hidden ' src={userdetails ? userService.getFilePreiview(userdetails.avatar) : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} alt="" />
@@ -101,7 +105,10 @@ function InstagramUserPanel () {
                 <Plus size={16} />
               </button>
             </div>
-          </div>
+          </div> */}
+          <DisplayPic className={`w-32 h-32`}userdetails ={userdetails}/>
+
+
 
           {/* Profile Details */}
           <div className="flex-1 text-center lg:text-left">
@@ -113,7 +120,11 @@ function InstagramUserPanel () {
               </div>
               <div className="text-center">
                 <div className="text-xl font-semibold">{userStats.followers}</div>
-                <div className="text-sm text-gray-400">followers</div>
+                <div className="text-sm text-gray-400">
+                  <button onClick={() => navigate('/followers')}>
+                  followers
+                  </button>
+                  </div>
               </div>
               <div className="text-center">
                 <div className="text-xl font-semibold">{userStats.following}</div>
@@ -122,7 +133,7 @@ function InstagramUserPanel () {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-center lg:justify-start space-x-3 mb-6">
+            {/* <div className="flex justify-center lg:justify-start space-x-3 mb-6">
               <button
                 onClick={() => setIsFollowing(!isFollowing)}
                 className={`px-8 py-2 rounded-lg font-medium transition-colors ${
@@ -136,7 +147,9 @@ function InstagramUserPanel () {
               <button className="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition-colors flex items-center space-x-2">
                 <MessageCircle size={16} />
               </button>
-            </div>
+
+            </div> */}
+            <FollowBtn followedId={userId}/>
 
             {/* Bio */}
             <div className="space-y-2">

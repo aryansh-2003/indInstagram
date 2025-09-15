@@ -15,6 +15,7 @@ import EditPost from './pages/EditPost'
 import Post from './pages/Post'
 
 import UserPannel from './user-pannel/UserPannel.jsx'
+import FollowersPage from './pages/Followers.jsx'
 
 
 
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
           path: "/user/:userId",
           element: <UserPannel/>,
+      },
+      {
+          path: "/followers",
+          element: <FollowersPage/>,
       },
     ]
   }

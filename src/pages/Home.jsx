@@ -5,10 +5,12 @@ import appwriteService from '../appwrite/config'
 import Container from '../components/container/Container'
 import PostCard from '../components/PostCard'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 function Home() {
     const [posts, setposts] = useState([])
     const value = useSelector((state) => state.auth.status)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (value) {
@@ -30,12 +32,16 @@ function Home() {
                     <h1 className="text-2xl font-light text-gray-900 mb-4">Welcome to Instagram</h1>
                     <p className="text-gray-600 mb-8">Sign up to see photos and videos from your friends.</p>
                     <div className="space-y-4">
-                        <a href="/login" className="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+                        <button 
+                        onClick={() => navigate('/login')}
+                         className="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
                             Log In
-                        </a>
-                        <a href="/signup" className="block w-full border border-gray-300 text-gray-900 py-2 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                        </button>
+                        <button
+                        onClick={() => navigate('/signup')}
+                         className="block w-full border border-gray-300 text-gray-900 py-2 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
                             Sign Up
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

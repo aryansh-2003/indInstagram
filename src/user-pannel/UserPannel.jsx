@@ -121,7 +121,7 @@ function InstagramUserPanel () {
               <div className="text-center">
                 <div className="text-xl font-semibold">{userStats.followers}</div>
                 <div className="text-sm text-gray-400">
-                  <button onClick={() => navigate('/followers')}>
+                  <button onClick={() => navigate(`/followers/${userId.userId}`)}>
                   followers
                   </button>
                   </div>

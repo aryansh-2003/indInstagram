@@ -1,11 +1,32 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Search, MoreHorizontal } from 'lucide-react';
+import userService from '../appwrite/user'
+import { useParams } from 'react-router-dom';
 
 const FollowersPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [followeruser, setfolloweruser] = useState();
   const [activeTab, setActiveTab] = useState('followers');
+  const userId = useParams()
+
+
   
   // Mock followers data
+
+  const follower = async () =>{
+    const service = await userService.getSubscription("",userId.userId)
+    // setfolloweruser(service)
+    console.log(service)
+    const data = service.documents.map((doc,index) => doc.follower?.[index])
+    
+    // if(service){
+    //   const data = await userService.getUserAccnt(service.documents.map((doc) => {return doc.follower}))
+    //   console.log(data)
+    // }
+
+  }
+  follower()
+  
   const followers = [
     { id: 1, username: 'alex_photo', name: 'Alex Photography', avatar: '/api/placeholder/40/40', isFollowing: false, isFollower: true },
     { id: 2, username: 'sarah_travels', name: 'Sarah Wilson', avatar: '/api/placeholder/40/40', isFollowing: true, isFollower: true },
@@ -88,10 +109,9 @@ const FollowersPage = () => {
       </div>
 
       {/* Users List */}
-      <div className="px-4 pb-4 bg-black">
-        {filteredUsers.map((user) => {
-          const isFollowing = followStates[user.id] ?? user.isFollowing;
-          
+      {/* <div className="px-4 pb-4 bg-black">
+        {followeruser ? followeruser.documents.map((user) => {   
+          console.log(followeruser.documents)       
           return (
             <div key={user.id} className="flex items-center justify-between py-3 hover:bg-gray-900 hover:bg-opacity-50 rounded-lg px-2 transition-colors">
               <div className="flex items-center space-x-3 flex-1 min-w-0">
@@ -117,19 +137,6 @@ const FollowersPage = () => {
               <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
                 {activeTab === 'followers' ? (
                   <>
-                    <button
-                      onClick={() => toggleFollow(user.id)}
-                      className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                        isFollowing
-                          ? 'bg-gray-700 text-white hover:bg-gray-600 border border-gray-600'
-                          : 'bg-blue-500 text-white hover:bg-blue-600'
-                      }`}
-                    >
-                      {isFollowing ? 'Following' : 'Follow'}
-                    </button>
-                    <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-600 transition-colors border border-gray-600">
-                      Remove
-                    </button>
                   </>
                 ) : (
                   <button
@@ -142,8 +149,8 @@ const FollowersPage = () => {
               </div>
             </div>
           );
-        })}
-      </div>
+        }) : null}
+      </div> */}
 
       {/* Empty state */}
       {filteredUsers.length === 0 && (

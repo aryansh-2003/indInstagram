@@ -13,16 +13,27 @@ export class Authservice {
       this.account = new Account(this.client);
     }
 
-    async createNewAccount({email, password, name}) {
-        try {
-            const newID = ID.unique()
-            const userAccount = await this.account.create(newID, email, password, name); 
-            if(userAccount) this.login({email,password})
-        } catch (error) {
-            console.log("Auth service :: creating account failed", error);
+// Updated createNewAccount method in your auth.js file
+async createNewAccount({email, password, name}) {
+    try {
+        const newID = ID.unique()
+        const userAccount = await this.account.create(newID, email, password, name); 
+        
+        if(userAccount) {
+            // Automatically login the user after account creation
+            const session = await this.login({email, password})
+            
+            if(session) {
+                return userAccount; // Return the created account
+            }
         }
+        
+        return null;
+    } catch (error) {
+        console.log("Auth service :: creating account failed", error);
+        throw error; // Re-throw the error so the signup component can handle it
     }
-
+}
     async getCurrentUser() {
         try {
             const Account = await this.account.get();

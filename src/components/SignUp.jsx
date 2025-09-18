@@ -17,14 +17,24 @@ function SignUp() {
         setError("")
         setLoading(true)
         try {
-            const userData = await authService.createNewAccount(data)
-            if(userData) {
+            // Create the account first
+            const newAccount = await authService.createNewAccount(data)
+            
+            if(newAccount) {
+                // Get the current user data after account creation
                 const userData = await authService.getCurrentUser()
-                if (userData) dispatch(login({userData}))
-                navigate('/')
+                
+                if (userData) {
+                    // Dispatch login action with correct payload structure
+                    dispatch(login(userData)) // Remove the extra object wrapping
+                    
+                    // Navigate to home page
+                    navigate('/')
+                }
             }
         } catch (error) {
             setError(error.message)
+            console.error('Signup error:', error)
         } finally {
             setLoading(false)
         }

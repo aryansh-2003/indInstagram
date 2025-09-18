@@ -80,7 +80,7 @@ const router = createBrowserRouter([
           element: <UserPannel/>,
       },
       {
-          path: "/followers",
+          path: "/followers/:userId",
           element: <FollowersPage/>,
       },
     ]

@@ -58,14 +58,32 @@ export class Service {
         async getSubscription(followerId,followedId){
             console.log(followerId,followedId)
         try {
-            return await this.databases.listDocuments(
+            if(followedId && followerId){
+                return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteSubscriptionCollectionId,
-                 [
+                [
                     Query.equal("follower",`${followerId}`),
                     Query.equal("followed",`${followedId}`)
                 ]
             )
+            }else if(followedId){
+                 return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteSubscriptionCollectionId,
+                [
+                    Query.equal("followed",`${followedId}`)
+                ]
+            )
+            }else{
+                return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteSubscriptionCollectionId,
+                [
+                    Query.equal("follower",`${followerId}`)
+                ]
+            )
+            }
         } catch (error) {
             console.log("Auth service :: getting post failed", error);
             

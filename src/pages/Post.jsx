@@ -5,10 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import appwriteService from '../appwrite/config'
 import authservice from '../appwrite/auth'
 import { useSelector } from 'react-redux'
-import {Container, Button, Likes} from '../components'
+import {Likes} from '../components'
 import parse from "html-react-parser";
 import { Link } from 'react-router-dom'
-import interservice from '../appwrite/interaction'
 import Comment from '../components/Comment'
 
 function Post() {

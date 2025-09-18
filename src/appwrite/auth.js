@@ -62,6 +62,7 @@ async createNewAccount({email, password, name}) {
         try {
             return await this.account.createEmailPasswordSession(email,password)
         } catch (error) {
+            throw error
             console.log("Auth service :: login failed", error);
         }
     }

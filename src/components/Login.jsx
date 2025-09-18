@@ -17,18 +17,22 @@ export default function Login() {
   const login = async (data) => {
     setError("")
     setLoading(true)
-    try {
-      const session = await authservice.login(data)
-      if(session){
-        const userData = await authservice.getCurrentUser()
-        if (userData) dispatch(authLogin(userData))
-        navigate("/")
+    
+      await authservice.login(data).then((session)=>{
+        if(session){
+        authservice.getCurrentUser().then((userData)=>{
+           if (userData) dispatch(authLogin(userData))
+          navigate("/")
+        }).catch((err)=>{
+          setError(err)
+        })
       }
-    } catch (error) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
+      }).catch((error)=>{
+        console.log(error)
+        setError(error.message)
+      }).finally(()=>{
+         setLoading(false)
+      })
   }
 
   return (

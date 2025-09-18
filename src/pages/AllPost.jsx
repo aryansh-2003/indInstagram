@@ -3,6 +3,7 @@ import appwriteService from "../appwrite/config";
 import userService from "../appwrite/user";
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { DisplayPic } from '../components';
 
 function AllPosts() {
     const [posts, setPosts] = useState([])
@@ -17,7 +18,9 @@ function AllPosts() {
             try {
                 const id = userDataGet.$id
                 const postsResponse = await appwriteService.getALLUserPosts(id)
-                
+                const data = await userService.getUserAccnt(id)
+                console.log(data)
+                setavatar(data)
                 if (postsResponse && postsResponse.documents) {
                     setPosts(postsResponse.documents)
                     setLoading(false)
@@ -25,7 +28,7 @@ function AllPosts() {
             } catch (error) {
                 console.log("fetching error", error)
             } finally {
-               getAvatar()
+               
                setLoading(false)
             }
         }
@@ -73,13 +76,14 @@ function AllPosts() {
                         <div className="flex justify-center md:justify-start relative">
                             <div className="w-32 h-32 bg-gradient-to-r   from-purple-400 to-pink-400 rounded-full p-1">
                                 <div className="w-full h-full  bg-white  rounded-full flex items-center justify-center">
-                                    {avatar ? <img className='rounded-full absolute' src={avatar} alt="empty" /> :
-                                    userDataGet?.name?.charAt(0)?.toUpperCase() || 'U'}
-                                        <input type="file" className="text-[3px] absolute z-50" onChange={handleavatarupload} id="myFile" name="filename"/> 
+                                    {/* {avatar ? <img className='rounded-full absolute' src={avatar} alt="empty" /> :
+                                    userDataGet?.name?.charAt(0)?.toUpperCase() || 'U'} */}
+                                     <DisplayPic className='w-30 h-30' userdetails={avatar ? avatar.documents?.[0] : null}></DisplayPic>
+                                    {/* <input type="file" className="text-[3px] absolute z-50" onChange={handleavatarupload} id="myFile" name="filename"/>  */}
                                 </div>
                             </div>
                         </div>
-
+                             
                         {/* Profile Info */}
                         <div className="flex-1 text-center md:text-left">
                             <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-4">
@@ -93,9 +97,9 @@ function AllPosts() {
                                     >
                                         New Post
                                     </Link>
-                                    <button className="px-4 py-1 border border-gray-300 text-gray-900 text-sm font-semibold rounded-md hover:bg-gray-50 transition-colors">
-                                        Edit Profile
-                                    </button>
+                                    <label>New Dp</label>
+                                    <input type="file" className="px-4 py-1 w-20 border  border-gray-300 text-gray-900 text-sm font-semibold rounded-md hover:bg-gray-50 transition-colors"
+                                     onChange={handleavatarupload} id="myFile" name="filename"/>                     
                                 </div>
                             </div>
 

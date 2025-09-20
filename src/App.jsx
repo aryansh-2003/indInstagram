@@ -25,15 +25,15 @@ function App() {
   }, [])
 
   return !loading ? (
-    <div className=' bg-gray-50'>
-      {/* Main Container */}
+    <div className='min-h-screen bg-gray-50'>
+      {/* Main Layout Container */}
       <div className='flex'>
-        {/* Sidebar */}
+        {/* Left Sidebar - Fixed position on desktop, bottom nav on mobile */}
         <Header />
         
-        {/* Main Content Area */}
-        <div className='w-full'>
-          <main className=''>
+        {/* Main Content Area - Takes remaining space */}
+        <div className='flex-1 md:ml-[20%] mb-16 md:mb-0'>
+          <main className='w-full'>
             <Outlet />
           </main>
         </div>

@@ -77,7 +77,7 @@ function InstagramUserPanel () {
 
 
   return (
-    <div className="max-w-4xl mx-auto bg-black text-white min-h-screen">
+    <div className="w-full mx-auto bg-black text-white min-h-screen ">
       {/* Profile Header */}
       <div className="px-6 py-8 border-b border-gray-800">
         {/* Top Section with Username and Actions */}
@@ -115,7 +115,7 @@ function InstagramUserPanel () {
             {/* Stats */}
             <div className="flex justify-center lg:justify-start space-x-8 mb-6">
               <div className="text-center">
-                <div className="text-xl font-semibold">{userStats.posts}</div>
+                <div className="text-xl font-semibold">{posts ? posts.length : 0 }</div>
                 <div className="text-sm text-gray-400">publications</div>
               </div>
               <div className="text-center">

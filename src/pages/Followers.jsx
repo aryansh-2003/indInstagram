@@ -17,11 +17,13 @@ const FollowersPage = () => {
     const service = await userService.getSubscription("",userId.userId)
     // setfolloweruser(service)
     console.log(service)
-    const data = service.documents.map((doc,index) => doc.follower?.[index])
+    // const data = service.documents.map((doc) => doc.follower)
+    const id = service.documents.splice
+    console.log(id)
     
-    // if(service){
-    //   const data = await userService.getUserAccnt(service.documents.map((doc) => {return doc.follower}))
-    //   console.log(data)
+    // if(data){
+    //   const follow = await userService.getUserAccnt(data.map((doc,index) => doc?.[index]))
+    //   console.log(data.forEach((doc)=>{return doc}))
     // }
 
   }

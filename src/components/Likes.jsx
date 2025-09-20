@@ -73,7 +73,7 @@ function Likes({userData, post}) {
                 </svg>
             </button>
             {totalLikes > 0 && (
-                <span className="text-sm font-semibold text-gray-900 mt-2">
+                <span className="text-sm font-semibold text-white mt-2">
                     {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
                 </span>
             )}

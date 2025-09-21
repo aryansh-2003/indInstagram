@@ -7,7 +7,7 @@ import { stringify } from 'postcss';
 
 function FollowBtn({followedId}) {
       const [isFollowing, setIsFollowing]  = useState(false);
-      const followerId = useSelector(state => state.auth.userData.$id)
+      const followerId = useSelector(state => state ? state.auth.userData.$id : null) 
       const isAuthor = followedId && followerId ? followerId === followedId.userId : false;    
       
 

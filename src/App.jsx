@@ -32,7 +32,7 @@ function App() {
         <Header />
         
         {/* Main Content Area - Takes remaining space */}
-        <div className='flex-1 md:ml-[20%] mb-16 md:mb-0'>
+        <div className='flex-1 md:ml-[20%]  md:mb-0'>
           <main className='w-full'>
             <Outlet />
           </main>
